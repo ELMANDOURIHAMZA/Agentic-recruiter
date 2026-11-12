@@ -1,4 +1,4 @@
-﻿from sqlalchemy import create_engine
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from app.core.config import settings
@@ -14,3 +14,15 @@ SessionLocal = sessionmaker(
     autoflush=False,
     autocommit=False,
 )
+
+from collections.abc import Generator
+from sqlalchemy.orm import Session
+
+
+def get_db() -> Generator[Session, None, None]:
+    """Provide a database session for a request."""
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
